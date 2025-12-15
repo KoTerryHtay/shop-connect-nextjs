@@ -11,9 +11,7 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarHeader,
   SidebarRail,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { useClientSession } from "@/hooks/useClientSession";
 
@@ -69,15 +67,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: session } = useClientSession();
 
   return (
-    <Sidebar className="pt-16" collapsible="icon" {...props}>
-      <SidebarHeader className="relative pb-6 mr-2">
-        <div className="absolute right-0 z-50">
-          <SidebarTrigger />
-        </div>
-        {/* <TeamSwitcher teams={data.teams} /> */}
-      </SidebarHeader>
+    <Sidebar className="pt-14" collapsible="icon" {...props}>
+      {/* <SidebarHeader className="relative pb-6 mr-2"></SidebarHeader> */}
 
-      <SidebarContent>
+      <SidebarContent className="pt-4">
         <NavMain items={data.navMain} />
         <NavProjects projects={data.projects} />
       </SidebarContent>
