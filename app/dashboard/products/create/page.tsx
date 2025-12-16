@@ -1,14 +1,17 @@
+"use client";
+
+import { UploadForm } from "@/features/products/components/upload-form";
+
 export default function NewProductPage() {
   return (
-    <div>
-      New Product Page
-      <div>
-        <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-          <div className="bg-muted/50 aspect-video rounded-xl" />
-          <div className="bg-muted/50 aspect-video rounded-xl" />
-          <div className="bg-muted/50 aspect-video rounded-xl" />
-        </div>
-        <div className="bg-muted/50 min-h-screen flex-1 rounded-xl md:min-h-min" />
+    <div className="p-4 w-full h-full">
+      <div className="flex justify-center">
+        <section className="w-full max-w-2xl">
+          <div className="text-xl font-semibold">Add new product</div>
+
+          <UploadForm />
+          {/* <div className="bg-muted/50 mt-4 p-4"></div> */}
+        </section>
       </div>
     </div>
   );

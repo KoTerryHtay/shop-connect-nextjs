@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   Folder,
   Forward,
@@ -24,7 +25,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 
 export function NavProjects({

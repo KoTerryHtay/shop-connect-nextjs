@@ -1,7 +1,6 @@
-import { AppSidebar } from "@/features/products/sidebar/components/app-sidebar";
+import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-
-import { SiteHeader } from "@/features/products/sidebar/components/site-header";
+import { SiteHeader } from "@/components/sidebar/site-header";
 
 export default function ProductLayout({
   children,

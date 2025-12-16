@@ -21,6 +21,54 @@ model User {
   password String
   image    String?
 
+  bio String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
+  posts    Post[]
+
+  // orders   Order[]
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  price       Float
+  stock       Int      @default(0)
+  images      String[]
+
+  sellerId String?
+  seller   User?   @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  referPosts Post[]
+}
+
+model Post {
+  id      String   @id @default(cuid())
+  caption String
+  images  String[]
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  productId    String?
+  productRefer Product? @relation(fields: [productId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// model Order {
+//   id    String @id @default(cuid())
+//   total Float
+
+//   userId String?
+//   user   User?   @relation(fields: [userId], references: [id])
+
+//   createdAt DateTime @default(now())
+// }

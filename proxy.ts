@@ -1,18 +1,23 @@
 import { auth as proxy } from "@/auth";
 import { NextResponse } from "next/server";
 
+const protectedRoutes = ["/dashboard", "/api"];
+
 export default proxy(async function proxy(req) {
   const { pathname } = req.nextUrl;
-  // console.log("req.nextUrl. proxy >>>", req.nextUrl.pathname);
-  // console.log("req.nextUrl. proxy >>>", req.auth?.user);
-  // console.log("req.nextUrl. proxy >>>", req.nextUrl.origin);
+  // console.log("proxy req.nextUrl.pathname >>>", req.nextUrl.pathname);
+  // console.log("proxy req.auth?.user >>>", req.auth?.user);
 
-  if (!req.auth) {
+  const isProtectedRoutes = protectedRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
+
+  if (!req.auth && isProtectedRoutes) {
     return NextResponse.redirect(new URL("/", req.nextUrl.origin));
   }
 
   if (req.auth?.user) {
-    if (pathname === "/login" || pathname === "/sign-up") {
+    if (pathname.startsWith("/login") || pathname.startsWith("/register")) {
       return NextResponse.redirect(new URL("/", req.nextUrl.origin));
     }
   }
@@ -21,6 +26,6 @@ export default proxy(async function proxy(req) {
 });
 
 export const config = {
-  matcher: "/:path*",
-  // matcher: "/about/:path*",
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|assets).*)"],
+  // matcher: ["/dashboard/:path*", "/login", "/register"],
 };

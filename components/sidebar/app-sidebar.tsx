@@ -2,24 +2,23 @@
 
 import * as React from "react";
 import { BookA, Handbag, Users } from "lucide-react";
+import { useClientSession } from "@/hooks/useClientSession";
 
-import { NavMain } from "@/features/products/sidebar/components/nav-main";
-import { NavProjects } from "@/features/products/sidebar/components/nav-projects";
-import { NavUser } from "@/features/products/sidebar/components/nav-user";
-
+import { NavMain } from "@/components/sidebar/nav-main";
+import { NavProjects } from "@/components/sidebar/nav-projects";
+import { NavUser } from "@/components/sidebar/nav-user";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { useClientSession } from "@/hooks/useClientSession";
 
 const data = {
   user: {
     name: "shadcn",
     email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    avatar: "https://github.com/shadcn.png",
   },
   navMain: [
     {

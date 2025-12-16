@@ -15,6 +15,7 @@ export default function ShopLayout({
               alt="logo"
               width={235}
               height={32}
+              loading="eager"
             />
           </div>
           <div className="text-white">US English</div>
