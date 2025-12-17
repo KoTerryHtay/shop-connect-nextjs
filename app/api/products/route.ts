@@ -2,6 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 // import { v2 as cloudinary } from "cloudinary";
 import prisma from "@/lib/prisma";
 
+export async function GET() {
+  const products = await prisma.product.findMany();
+
+  return NextResponse.json(
+    {
+      message: "Get All Product successfully",
+      products,
+    },
+    { status: 200 }
+  );
+}
+
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();

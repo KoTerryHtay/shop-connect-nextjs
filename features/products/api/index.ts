@@ -5,3 +5,9 @@ export async function createProduct(formData: FormData) {
 
   return response.data;
 }
+
+export async function getAllProducts() {
+  const response = await api.get("/products");
+
+  return response.data;
+}
