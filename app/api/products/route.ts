@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 // import { v2 as cloudinary } from "cloudinary";
 import prisma from "@/lib/prisma";
+import { auth } from "@/auth";
 
 export async function GET() {
   const products = await prisma.product.findMany();
@@ -15,6 +16,8 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  const session = await auth();
+
   try {
     const formData = await req.formData();
 
@@ -30,12 +33,18 @@ export async function POST(req: NextRequest) {
     const name = formData.get("name") as string;
     const description = formData.get("description") as string;
     const stock = parseInt(formData.get("stock") as string);
+    const price = parseFloat(formData.get("price") as string);
 
-    console.log("/api/products create products >>>", {
-      name,
-      description,
-      stock,
-    });
+    console.log(
+      "/api/products create products >>>",
+      {
+        name,
+        description,
+        stock,
+        price,
+      },
+      typeof price
+    );
 
     console.log("/api/products create products File >>>", files);
 
@@ -80,9 +89,10 @@ export async function POST(req: NextRequest) {
       data: {
         name,
         description,
-        price: 10000,
+        price,
         stock,
         images: imageUrls,
+        sellerId: session?.user.id,
       },
     });
 

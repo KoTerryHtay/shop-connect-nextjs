@@ -8,8 +8,10 @@ import { Save, Upload, X } from "lucide-react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useCreateProduct } from "../hooks/useCreateProduct";
-import { createProductFormSchema } from "../validations/createProductFormSchema";
+import { Product } from "@/app/generated/prisma/client";
+
+import { useUpdateProduct } from "../hooks/useUpdateProduct";
+import { updateProductFormSchema } from "../validations/updateProductFormSchema";
 
 import {
   Card,
@@ -38,21 +40,42 @@ interface ImagePreview {
 
 const MAX_IMAGES = 3;
 
-export function UploadForm() {
+interface Props {
+  product: Partial<Product>;
+}
+
+export function UpdateForm({ product }: Props) {
   const [images, setImages] = useState<ImagePreview[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+
+  const [productImages, setProductImages] = useState(product.images ?? []);
+
+  const removeProductImage = (image: string) => {
+    const updated = productImages!.filter((checkImage) => checkImage !== image);
+    setProductImages(updated);
+    // form.setValue(
+    //   "images",
+    //   updated.map((img) => img.file),
+    //   { shouldValidate: true }
+    // );
+  };
+
+  console.log("productImages >>>", productImages);
+  console.log("images >>>", images);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof createProductFormSchema>>({
-    resolver: zodResolver(createProductFormSchema),
+  const form = useForm<z.infer<typeof updateProductFormSchema>>({
+    resolver: zodResolver(updateProductFormSchema),
     defaultValues: {
-      name: "White T-Shirts",
-      description: "To style-obsessed people, the perfect white T-shirt",
-      stock: "",
-      price: "",
+      name: product?.name ?? "White T-Shirts",
+      description:
+        product?.description ??
+        "To style-obsessed people, the perfect white T-shirt",
+      stock: product?.stock ? product?.stock.toString() : "",
+      price: product?.price ? product?.price.toString() : "",
       images: [],
     },
   });
@@ -129,9 +152,9 @@ export function UploadForm() {
     );
   };
 
-  const { mutate: createProduct } = useCreateProduct();
+  const { mutate: updateProduct } = useUpdateProduct();
 
-  const onSubmit = async (values: z.infer<typeof createProductFormSchema>) => {
+  const onSubmit = async (values: z.infer<typeof updateProductFormSchema>) => {
     console.log("Form values >>>", values);
 
     const formData = new FormData();
@@ -139,15 +162,18 @@ export function UploadForm() {
     formData.append("description", values.description);
     formData.append("stock", values.stock.toString());
     formData.append("price", values.price.toString());
+    formData.append("productImages", JSON.stringify(productImages));
 
-    values.images.forEach((image) => {
-      formData.append("images", image);
-    });
+    if (values.images) {
+      values.images.forEach((image) => {
+        formData.append("images", image);
+      });
+    }
 
     // console.log("formData >>>", formData);
     // console.log("formData values.images >>>", values.images);
 
-    createProduct(formData);
+    updateProduct({ formData, productId: product.id! });
     router.push("/dashboard/products");
 
     // try {
@@ -209,7 +235,7 @@ export function UploadForm() {
                     <NumericInput
                       value={field.value}
                       onChange={field.onChange}
-                      placeholder="Enter price"
+                      placeholder="Enter Price"
                     />
                   </FormControl>
                   <FormMessage />
@@ -227,7 +253,7 @@ export function UploadForm() {
                     <NumericInput
                       value={field.value}
                       onChange={field.onChange}
-                      placeholder="Enter Stock"
+                      placeholder="Enter Total Stock"
                     />
                   </FormControl>
                   <FormMessage />
@@ -253,6 +279,43 @@ export function UploadForm() {
                 </FormItem>
               )}
             />
+
+            {productImages.length > 0 && (
+              <div>
+                <div>
+                  Image Found
+                  <span className="text-muted-foreground text-xs ml-2">
+                    ({productImages.length}/{MAX_IMAGES})
+                  </span>
+                </div>
+                <div className="grid grid-cols-3 gap-4 mb-4 mt-2">
+                  {productImages.map((image, index) => (
+                    <div key={image} className="relative group aspect-square">
+                      <Image
+                        src={image || "/placeholder.svg"}
+                        alt={`Image ${index + 1}`}
+                        className="w-full h-full object-cover rounded-lg border-2 border-border"
+                        width={200}
+                        height={200}
+                        loading="eager"
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        onClick={() => removeProductImage(image)}
+                        className="absolute top-2 right-2 h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <X className="w-4 h-4" />
+                        <span className="sr-only">
+                          Remove image {index + 1}
+                        </span>
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <FormField
               control={form.control}
