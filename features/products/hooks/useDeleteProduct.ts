@@ -1,45 +1,45 @@
 import { useMutation } from "@tanstack/react-query";
-import { updateProduct } from "../api";
 import { getQueryClient } from "@/lib/queryClient";
+import { deleteProduct } from "../api";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import { Product } from "@/app/generated/prisma/client";
 
-type UpdateProduct = {
+type DeleteProduct = {
   productId: string;
-  formData: FormData;
 };
 
 type OldProduct = { message: string; products: Product[] };
 
-export function useUpdateProduct() {
+export function useDeleteProduct() {
   const queryClient = getQueryClient();
+  const router = useRouter();
 
   return useMutation({
-    mutationFn: ({ formData, productId }: UpdateProduct) =>
-      updateProduct(formData, productId),
-
-    onSuccess: (data, variables) => {
-      // console.log("onSuccess data >>>", data.product);
-      toast.success("Product successfully updated", {
+    mutationFn: ({ productId }: DeleteProduct) => deleteProduct(productId),
+    onSuccess: (_, variable) => {
+      // console.log("onSuccess");
+      toast.success("Product successfully deleted", {
         position: "bottom-center",
       });
 
       queryClient.invalidateQueries({
-        queryKey: ["products", variables.productId],
+        queryKey: ["products"],
       });
 
       queryClient.setQueryData(["products"], (old: OldProduct) => {
-        // console.log("onSuccess old data >>>", old);
-
+        console.log("onSuccess old data >>>", old);
         if (!old) return;
 
         return {
           ...old,
-          products: old.products.map((product) =>
-            product.id === variables.productId ? data.product : product
+          products: old.products.filter(
+            (product) => product.id !== variable.productId
           ),
         };
       });
+
+      router.push("/dashboard/products");
     },
   });
 }

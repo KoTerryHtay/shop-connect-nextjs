@@ -32,6 +32,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { NumericInput } from "@/components/NumericInput";
+import DeleteAlertDialog from "./DeleteAlertDialog";
 
 interface ImagePreview {
   file: File;
@@ -60,8 +61,8 @@ export function UpdateForm({ product }: Props) {
     // );
   };
 
-  console.log("productImages >>>", productImages);
-  console.log("images >>>", images);
+  // console.log("productImages >>>", productImages);
+  // console.log("images >>>", images);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -69,7 +70,16 @@ export function UpdateForm({ product }: Props) {
 
   const form = useForm<z.infer<typeof updateProductFormSchema>>({
     resolver: zodResolver(updateProductFormSchema),
-    defaultValues: {
+    // defaultValues: {
+    //   name: product?.name ?? "White T-Shirts",
+    //   description:
+    //     product?.description ??
+    //     "To style-obsessed people, the perfect white T-shirt",
+    //   stock: product?.stock ? product?.stock.toString() : "",
+    //   price: product?.price ? product?.price.toString() : "",
+    //   images: [],
+    // },
+    values: {
       name: product?.name ?? "White T-Shirts",
       description:
         product?.description ??
@@ -409,6 +419,9 @@ export function UpdateForm({ product }: Props) {
               <Save className="size-4" />
               <div>Submit Form</div>
             </button>
+            <div>
+              <DeleteAlertDialog productId={product.id!} />
+            </div>
           </form>
         </Form>
       </CardContent>

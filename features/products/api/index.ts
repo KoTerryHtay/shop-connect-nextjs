@@ -12,6 +12,12 @@ export async function updateProduct(formData: FormData, productId: string) {
   return response.data;
 }
 
+export async function deleteProduct(productId: string) {
+  const response = await api.delete(`/products/${productId}`);
+
+  return response.data;
+}
+
 export async function getAllProducts() {
   const response = await api.get("/products");
 

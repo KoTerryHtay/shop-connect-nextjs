@@ -165,3 +165,57 @@ export async function PATCH(
     );
   }
 }
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: RouteContext<"/api/products/[productId]">
+) {
+  const { productId } = await params;
+
+  try {
+    const session = await auth();
+
+    // console.log("session user >>>", session?.user);
+
+    // check exit product by productId and userId
+    const checkProduct = await prisma.product.findFirst({
+      where: { id: productId, sellerId: session?.user.id },
+    });
+
+    // console.log("checkProduct to delete >>>", checkProduct);
+
+    if (!checkProduct) {
+      return NextResponse.json(
+        { message: "Product not found" },
+        { status: 404 }
+      );
+    }
+
+    // const deletedProduct =
+    await prisma.product.delete({
+      where: {
+        id: checkProduct.id,
+        sellerId: session?.user.id,
+      },
+    });
+
+    // console.log("deletedProduct >>>", deletedProduct);
+
+    return NextResponse.json(
+      {
+        message: "Product deleted successfully",
+      },
+      { status: 200 }
+    );
+  } catch (e) {
+    console.error(e);
+
+    return NextResponse.json(
+      {
+        message: "Product Deleted Failed",
+        error: e instanceof Error ? e.message : "Unknown",
+      },
+      { status: 500 }
+    );
+  }
+}

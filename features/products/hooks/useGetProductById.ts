@@ -8,9 +8,8 @@ interface ProductInterface {
 }
 
 export function useGetProductById(productId: string) {
-  console.log("useGetProductById productId >>>", productId);
   return useQuery<ProductInterface>({
-    queryKey: [`products/${productId}`],
+    queryKey: ["products", productId],
     queryFn: () => getProductById(productId),
   });
 }

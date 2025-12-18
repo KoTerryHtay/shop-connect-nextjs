@@ -2,7 +2,6 @@
 
 import { useState, useRef } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { Save, Upload, X } from "lucide-react";
 import * as z from "zod";
@@ -43,8 +42,6 @@ export function UploadForm() {
   const [isDragging, setIsDragging] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const router = useRouter();
 
   const form = useForm<z.infer<typeof createProductFormSchema>>({
     resolver: zodResolver(createProductFormSchema),
@@ -148,7 +145,6 @@ export function UploadForm() {
     // console.log("formData values.images >>>", values.images);
 
     createProduct(formData);
-    router.push("/dashboard/products");
 
     // try {
     // const response = await api.post("/products", formData);
