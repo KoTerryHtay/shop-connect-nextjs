@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { clsx } from "clsx";
 import { ChevronDown, ChevronRight, MapPin } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function HomePage() {
   const [open, setOpen] = useState(false);
@@ -52,11 +52,11 @@ export default function HomePage() {
               </div>
             </div>
             <div className="text-[rgb(0,0,0,55)] h-4 self-center">
-              <ChevronDown className={clsx("w-4", open ? "rotate-180" : "")} />
+              <ChevronDown className={cn("w-4", open ? "rotate-180" : "")} />
             </div>
           </div>
           <div
-            className={clsx(
+            className={cn(
               "rounded-lg mt-2 overflow-hidden bg-gray-100",
               open ? "block" : "hidden"
             )}

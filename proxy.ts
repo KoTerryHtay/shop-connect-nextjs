@@ -8,6 +8,9 @@ export default proxy(async function proxy(req) {
   // console.log("proxy req.nextUrl.pathname >>>", req.nextUrl.pathname);
   // console.log("proxy req.auth?.user >>>", req.auth?.user);
 
+  // const { device } = userAgent(req);
+  // console.log("proxy device >>>", device);
+
   const isProtectedRoutes = protectedRoutes.some((route) =>
     pathname.startsWith(route)
   );
